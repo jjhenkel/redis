@@ -1,0 +1,521 @@
+{
+    "cells": [
+        {
+            "source": [
+                "![code-book logo](data:image/svg+xml,%3Csvg%20width%3D%22400%22%20height%3D%22100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20100%22%3E%0A%20%3Cstyle%20type%3D%22text%2Fcss%22%3E.st0%7Bfill%3A%23000000%3Bstroke%3A%23000000%3Bstroke-width%3A3%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st1%7Bstroke%3A%23000000%3Bstroke-width%3A3%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st2%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A3%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st3%7Bstroke%3A%23000000%3Bstroke-width%3A3%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st4%7Bfill%3A%23000000%3Bstroke%3A%23000000%3Bstroke-width%3A4%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st5%7Bfill%3A%23000000%3Bstroke%3A%23000000%3Bstroke-width%3A2%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st6%7Bstroke%3A%23000000%3Bstroke-width%3A2%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st7%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A2%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st8%7Bstroke%3A%23000000%3Bstroke-width%3A2%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st9%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A5%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st10%7Bfill%3Anone%3B%7D%0A%09.st11%7Bstroke%3A%23000000%3Bstroke-width%3A4%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st12%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A4%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st13%7Bfill%3A%23000000%3Bstroke%3A%23000000%3Bstroke-width%3A4%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st14%7Bfill%3A%23000000%3B%7D%0A%09.st15%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A4%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st16%7Bfill%3A%23000000%3Bstroke%3A%23000000%3Bstroke-width%3A3%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st17%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A5%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st18%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st19%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A3%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st20%7Bstroke%3A%23000000%3Bstroke-width%3A1.5%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st21%7Bstroke%3A%23000000%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st22%7Bfill%3A%23000000%3Bstroke%3A%23000000%3Bstroke-width%3A5%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st23%7Bfill%3A%23000000%3Bstroke%3A%23000000%3Bstroke-width%3A5%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st24%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A2%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st25%7Bfill%3Anone%3Bstroke%3A%23000000%3Bstroke-width%3A2%3Bstroke-miterlimit%3A10%3B%7D%0A%09.st26%7Bfill%3A%23000000%3Bstroke%3A%23000000%3Bstroke-width%3A2%3Bstroke-miterlimit%3A10%3B%7D%3C%2Fstyle%3E%0A%0A%20%3Cg%3E%0A%20%20%3Ctitle%3Ebackground%3C%2Ftitle%3E%0A%20%20%3Crect%20fill%3D%22none%22%20id%3D%22canvas_background%22%20height%3D%22102%22%20width%3D%22402%22%20y%3D%22-1%22%20x%3D%22-1%22%2F%3E%0A%20%3C%2Fg%3E%0A%20%3Cg%3E%0A%20%20%3Ctitle%3ELayer%201%3C%2Ftitle%3E%0A%20%20%3Crect%20id%3D%22svg_17%22%20height%3D%2294.45281%22%20width%3D%22393.70052%22%20y%3D%222.77359%22%20x%3D%223.14973%22%20stroke-opacity%3D%22null%22%20stroke-dasharray%3D%222%2C2%22%20stroke-width%3D%220%22%20stroke%3D%22%23000%22%20fill%3D%22%23ffffff%22%2F%3E%0A%20%20%3Cg%20stroke%3D%22null%22%20id%3D%22svg_1%22%20fill%3D%22none%22%3E%0A%20%20%20%3Cpath%20stroke%3D%22null%22%20fill%3D%22%231f1f23%22%20id%3D%22svg_2%22%20d%3D%22m32.7691%2C72.00838c-1.05918%2C0%20-1.8914%2C0.85545%20-1.8914%2C1.9442s0.83222%2C1.9442%201.8914%2C1.9442l3.17755%2C0l0%2C9.09887l58.02811%2C0l0%2C-69.99131l-58.02811%2C0l0%2C10.80977l-3.17755%2C0c-1.05918%2C0%20-1.8914%2C0.85545%20-1.8914%2C1.9442s0.83222%2C1.9442%201.8914%2C1.9442l3.17755%2C0l0%2C11.50968l-3.17755%2C0c-1.05918%2C0%20-1.8914%2C0.85545%20-1.8914%2C1.9442s0.83222%2C1.9442%201.8914%2C1.9442l3.17755%2C0l0%2C11.50968l-3.17755%2C0c-1.05918%2C0%20-1.8914%2C0.85545%20-1.8914%2C1.9442s0.83222%2C1.9442%201.8914%2C1.9442l3.17755%2C0l0%2C11.50968l-3.17755%2C0zm57.42286%2C9.09887l-9.00306%2C0l0%2C-62.21449l9.00306%2C0l0%2C62.21449zm-50.46251%2C-20.60855l3.85845%2C0c1.05918%2C0%201.8914%2C-0.85545%201.8914%2C-1.9442s-0.83222%2C-1.9442%20-1.8914%2C-1.9442l-3.85845%2C0l0%2C-11.50968l3.85845%2C0c1.05918%2C0%201.8914%2C-0.85545%201.8914%2C-1.9442s-0.83222%2C-1.9442%20-1.8914%2C-1.9442l-3.85845%2C0l0%2C-11.50968l3.85845%2C0c1.05918%2C0%201.8914%2C-0.85545%201.8914%2C-1.9442s-0.83222%2C-1.9442%20-1.8914%2C-1.9442l-3.85845%2C0l0%2C-6.92136l39.94634%2C0l0%2C62.21449l-39.94634%2C0l0%2C-5.21046l3.85845%2C0c1.05918%2C0%201.8914%2C-0.85545%201.8914%2C-1.9442s-0.83222%2C-1.9442%20-1.8914%2C-1.9442l-3.85845%2C0l0%2C-11.50968z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Ctext%20stroke%3D%22%23000%22%20transform%3D%22matrix%280.8054574728012085%2C0%2C0%2C0.7810266017913818%2C4.960834443569183%2C3.137478221207857%29%20%22%20stroke-dasharray%3D%222%2C2%22%20font-style%3D%22normal%22%20font-weight%3D%22normal%22%20xml%3Aspace%3D%22preserve%22%20text-anchor%3D%22start%22%20font-family%3D%22%27Courier%20New%27%2C%20Courier%2C%20monospace%22%20font-size%3D%2263%22%20id%3D%22svg_3%22%20y%3D%2276.69063%22%20x%3D%2253.99764%22%20stroke-width%3D%220%22%20fill%3D%22%2322a6f1%22%3E%7B%3C%2Ftext%3E%0A%20%20%3Ctext%20font-weight%3D%22normal%22%20font-style%3D%22normal%22%20stroke%3D%22%23000%22%20transform%3D%22matrix%280.9952208399772644%2C0%2C0%2C1%2C0.4419229533523321%2C0%29%20%22%20stroke-dasharray%3D%222%2C2%22%20xml%3Aspace%3D%22preserve%22%20text-anchor%3D%22start%22%20font-family%3D%22%27Courier%20New%27%2C%20Courier%2C%20monospace%22%20font-size%3D%2257%22%20id%3D%22svg_6%22%20y%3D%2266.2222%22%20x%3D%2292.4707%22%20stroke-width%3D%220%22%20fill%3D%22%2322a6f1%22%3Eode%20book%3C%2Ftext%3E%0A%20%20%3Cline%20stroke-linecap%3D%22undefined%22%20stroke-linejoin%3D%22undefined%22%20id%3D%22svg_7%22%20y2%3D%2269.54894%22%20x2%3D%22395.2319%22%20y1%3D%2270.43167%22%20x1%3D%2299.51514%22%20stroke-width%3D%220%22%20fill%3D%22none%22%2F%3E%0A%20%20%3Cline%20stroke-width%3D%220%22%20stroke-linecap%3D%22undefined%22%20stroke-linejoin%3D%22undefined%22%20id%3D%22svg_8%22%20y2%3D%2272.78564%22%20x2%3D%22394.95962%22%20y1%3D%2273.37413%22%20x1%3D%2298.61046%22%20fill%3D%22none%22%2F%3E%0A%20%20%3Cline%20transform%3D%22rotate%285%20226.92346191406244%2C80.43601989746088%29%20%22%20stroke-dasharray%3D%222%2C2%22%20stroke-linecap%3D%22undefined%22%20stroke-linejoin%3D%22undefined%22%20id%3D%22svg_12%22%20y2%3D%2276.90508%22%20x2%3D%22284.30133%22%20y1%3D%2283.96697%22%20x1%3D%22169.54558%22%20stroke-width%3D%22NaN%22%20fill%3D%22none%22%2F%3E%0A%20%20%3Ctext%20transform%3D%22matrix%280.9974961268488016%2C0%2C0%2C0.8404798463773975%2C10.796253784883731%2C-100.20722702202711%29%20%22%20stroke-dasharray%3D%222%2C2%22%20font-style%3D%22normal%22%20font-weight%3D%22normal%22%20xml%3Aspace%3D%22preserve%22%20text-anchor%3D%22start%22%20font-family%3D%22%27Courier%20New%27%2C%20Courier%2C%20monospace%22%20font-size%3D%2226%22%20id%3D%22svg_13%22%20y%3D%22185.73467%22%20x%3D%22185.41808%22%20stroke-width%3D%220%22%20fill%3D%22%231f1f23%22%3E%7B%3C%2Ftext%3E%0A%20%20%3Ctext%20transform%3D%22matrix%280.9974961268488016%2C0%2C0%2C0.8404798463773975%2C10.796253784883731%2C-100.20722702202711%29%20%22%20stroke-dasharray%3D%222%2C2%22%20font-style%3D%22normal%22%20font-weight%3D%22normal%22%20xml%3Aspace%3D%22preserve%22%20text-anchor%3D%22start%22%20font-family%3D%22%27Courier%20New%27%2C%20Courier%2C%20monospace%22%20font-size%3D%2226%22%20id%3D%22svg_15%22%20y%3D%22185.73467%22%20x%3D%22201.64167%22%20stroke-width%3D%220%22%20fill%3D%22%231f1f23%22%3E%7D%3C%2Ftext%3E%0A%20%3C%2Fg%3E%0A%3C%2Fsvg%3E)\n",
+                "\n",
+                "The next few cells have been auto-generated and will guide you through getting connected to your code!"
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "markdown"
+        },
+        {
+            "source": [
+                "# code-book autogen: if we haven't yet, let's do some one time setup\n",
+                "cb.one_time_setup(redo_setup=True)"
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                },
+                "is_one_time_setup": true,
+                "runState": 3,
+                "runStartTime": 1603835082985,
+                "lastRunDuration": 106,
+                "statusMessage": "done"
+            },
+            "cell_type": "code",
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "x-application/code-book-one-time-setup": "REDO"
+                    }
+                }
+            ]
+        },
+        {
+            "source": [
+                "# code-book autogen: then, we can attach to your code!\n",
+                "project = (\n",
+                "  cb.create_project(name='redis', commit='')\n",
+                "    .with_backend(cb.backends().azure())\n",
+                "    .with_build_options(cb.build_options())\n",
+                ")\n",
+                "\n",
+                "project.attach(db_only=True)"
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "code",
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/html": [
+                            "<script src=\"vscode-resource:/workspaces/code-book-vscode/dist/ipywidgets.js\"></script>\n"
+                        ]
+                    }
+                },
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/plain": "- Ensuring infrastructure is allocated...\n\u001b[K   ✓ Found resource group 'FindTune-EUS'\n\u001b[K   ✓ Using existing vnet: 'findtune-az-autogen-vnet-805736' (['10.0.0.0/16'])\n   ✓ Using existing subnet: 'findtune-az-autogen-subnet-797605' (10.0.0.0/24)\n\u001b[K   ✓ Using existing ip: 'findtune-az-autogen-ip-ft-db-719135' (52.186.44.12)\n   ✓ Using existing vm: 'findtune-az-autogen-vm-ft-db-680448'\n- Attaching...\n\u001b[K   ✓ 'findtune-az-autogen-vm-ft-db-680448' is running!\n\u001b[K   ✓ Skipping DB create. Database 'targets-redis' already exists!\n   ✓ Attached. Ready to run queries\n"
+                    }
+                },
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/plain": "<IPython.core.display.HTML object>",
+                        "text/html": "<div class=\"findtune\" style=\"display: none;\">{\"POSTGRES_HOST\": \"52.186.44.12\", \"POSTGRES_USER\": \"cb-admin\", \"POSTGRES_PASSWORD\": \"vie0thahnahpheKe\", \"POSTGRES_DB\": \"targets-redis\"}</div>"
+                    }
+                }
+            ]
+        },
+        {
+            "source": [
+                "project.ingest()"
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "code",
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/plain": "- Ensuring appropriate image registry exists...\n\u001b[K   ✓ Using existing registry: 'codebooktesting'\n\u001b[K- Preparing target docker image...\n   - Building image...\n\u001b[K      ✓ Image build complete!\n\u001b[K      ✓ Push complete!\n\u001b[K- Running remote build...\n\u001b[K   ✓ Build started! Use poll_status() to watch build progress.\n"
+                    }
+                }
+            ]
+        },
+        {
+            "source": [
+                "results = (\n",
+                "    project\n",
+                "      .query()\n",
+                "      .calls()\n",
+                "      .name_contains('checkinteger')\n",
+                "      .with_locations()\n",
+                "      .limit(30)\n",
+                "      .execute()\n",
+                "      .display()\n",
+                ")"
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "code",
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "x-application/code-book-tree-results": [
+                            {
+                                "as_text": "",
+                                "valid": true,
+                                "the_file_name": "",
+                                "start_line": 1,
+                                "start_column": 1,
+                                "end_line": 1,
+                                "end_column": 1
+                            },
+                            {
+                                "as_text": "luaL_checkinteger(L, 2)",
+                                "valid": true,
+                                "the_file_name": "/lstrlib.c",
+                                "start_line": 46,
+                                "start_column": 30,
+                                "end_line": 46,
+                                "end_column": 52
+                            },
+                            {
+                                "as_text": "luaL_checkinteger(L, 2)",
+                                "valid": true,
+                                "the_file_name": "/lua_cmsgpack.c",
+                                "start_line": 861,
+                                "start_column": 17,
+                                "end_line": 861,
+                                "end_column": 39
+                            },
+                            {
+                                "as_text": "luaL_checkinteger(l, optindex)",
+                                "valid": true,
+                                "the_file_name": "/lua_cjson.c",
+                                "start_line": 227,
+                                "start_column": 17,
+                                "end_line": 227,
+                                "end_column": 46
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "source": [
+                ""
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "code",
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "text/plain": "'host=52.186.44.12 user=cb-admin password=vie0thahnahpheKe dbname=targets-redis'"
+                    }
+                }
+            ]
+        },
+        {
+            "source": [
+                "results = (\n",
+                "    project\n",
+                "      .query()\n",
+                "      .variables()\n",
+                "      .name_contains('limit')\n",
+                "      .with_locations()\n",
+                "      .limit(30)\n",
+                "      .execute()\n",
+                "      .display()\n",
+                ")"
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "code",
+            "outputs": [
+                {
+                    "output_type": "display_data",
+                    "data": {
+                        "x-application/code-book-tree-results": [
+                            {
+                                "as_text": "InternalKey all_start, all_limit",
+                                "valid": true,
+                                "the_file_name": "/app/db/version_set.cc",
+                                "start_line": 1391,
+                                "start_column": 3,
+                                "end_line": 1391,
+                                "end_column": 26
+                            },
+                            {
+                                "as_text": "InternalKey limit(MakeKey(2 * fnum + 1), 1, kTypeDeletion)",
+                                "valid": true,
+                                "the_file_name": "/app/db/db_test.cc",
+                                "start_line": 2269,
+                                "start_column": 5,
+                                "end_line": 2269,
+                                "end_column": 62
+                            },
+                            {
+                                "as_text": "InternalKey limit(MakeKey(2 * fnum + 1), 1, kTypeDeletion)",
+                                "valid": true,
+                                "the_file_name": "/app/db/db_test.cc",
+                                "start_line": 2280,
+                                "start_column": 5,
+                                "end_line": 2280,
+                                "end_column": 62
+                            },
+                            {
+                                "as_text": "InternalKey limit(largest_user_key, 0, static_cast<ValueType>(0))",
+                                "valid": true,
+                                "the_file_name": "/app/db/version_set.cc",
+                                "start_line": 477,
+                                "start_column": 5,
+                                "end_line": 477,
+                                "end_column": 69
+                            },
+                            {
+                                "as_text": "InternalKey new_start, new_limit",
+                                "valid": true,
+                                "the_file_name": "/app/db/version_set.cc",
+                                "start_line": 1406,
+                                "start_column": 7,
+                                "end_line": 1406,
+                                "end_column": 30
+                            },
+                            {
+                                "as_text": "Limiter* fd_limiter",
+                                "valid": true,
+                                "the_file_name": "/app/util/env_posix.cc",
+                                "start_line": 152,
+                                "start_column": 55,
+                                "end_line": 152,
+                                "end_column": 64
+                            },
+                            {
+                                "as_text": "Limiter* mmap_limiter",
+                                "valid": true,
+                                "the_file_name": "/app/util/env_posix.cc",
+                                "start_line": 220,
+                                "start_column": 25,
+                                "end_line": 220,
+                                "end_column": 34
+                            },
+                            {
+                                "as_text": "Slice user_limit = ExtractUserKey(limit)",
+                                "valid": true,
+                                "the_file_name": "/app/db/dbformat.cc",
+                                "start_line": 69,
+                                "start_column": 3,
+                                "end_line": 69,
+                                "end_column": 42
+                            },
+                            {
+                                "as_text": "StkId limit = (ci == L->ci) ? L->top : (ci+1)->func",
+                                "valid": true,
+                                "the_file_name": "/ldebug.c",
+                                "start_line": 118,
+                                "start_column": 5,
+                                "end_line": 118,
+                                "end_column": 52
+                            },
+                            {
+                                "as_text": "char delimiter",
+                                "valid": true,
+                                "the_file_name": "/app/third_party/googletest/googletest/include/gtest/internal/gtest-internal.h",
+                                "start_line": 647,
+                                "start_column": 44,
+                                "end_line": 647,
+                                "end_column": 49
+                            },
+                            {
+                                "as_text": "char delimiter",
+                                "valid": true,
+                                "the_file_name": "/app/third_party/googletest/googletest/src/gtest.cc",
+                                "start_line": 943,
+                                "start_column": 44,
+                                "end_line": 943,
+                                "end_column": 49
+                            },
+                            {
+                                "as_text": "const Slice file_limit = f->largest.user_key()",
+                                "valid": true,
+                                "the_file_name": "/app/db/version_set.cc",
+                                "start_line": 515,
+                                "start_column": 5,
+                                "end_line": 515,
+                                "end_column": 50
+                            },
+                            {
+                                "as_text": "const Slice& limit",
+                                "valid": true,
+                                "the_file_name": "/app/db/autocompact_test.cc",
+                                "start_line": 37,
+                                "start_column": 37,
+                                "end_line": 37,
+                                "end_column": 50
+                            },
+                            {
+                                "as_text": "const Slice& limit",
+                                "valid": true,
+                                "the_file_name": "/app/db/db_test.cc",
+                                "start_line": 443,
+                                "start_column": 37,
+                                "end_line": 443,
+                                "end_column": 50
+                            },
+                            {
+                                "as_text": "const Slice& limit",
+                                "valid": true,
+                                "the_file_name": "/app/db/db_test.cc",
+                                "start_line": 450,
+                                "start_column": 36,
+                                "end_line": 450,
+                                "end_column": 49
+                            },
+                            {
+                                "as_text": "const Slice& limit",
+                                "valid": true,
+                                "the_file_name": "/app/db/dbformat.cc",
+                                "start_line": 66,
+                                "start_column": 51,
+                                "end_line": 66,
+                                "end_column": 64
+                            },
+                            {
+                                "as_text": "const Slice& limit",
+                                "valid": true,
+                                "the_file_name": "/app/db/dbformat.h",
+                                "start_line": 111,
+                                "start_column": 30,
+                                "end_line": 111,
+                                "end_column": 43
+                            },
+                            {
+                                "as_text": "const Slice& limit",
+                                "valid": true,
+                                "the_file_name": "/app/include/leveldb/comparator.h",
+                                "start_line": 49,
+                                "start_column": 38,
+                                "end_line": 49,
+                                "end_column": 51
+                            },
+                            {
+                                "as_text": "const Slice& limit",
+                                "valid": true,
+                                "the_file_name": "/app/table/table_test.cc",
+                                "start_line": 50,
+                                "start_column": 30,
+                                "end_line": 50,
+                                "end_column": 43
+                            },
+                            {
+                                "as_text": "const Slice& limit",
+                                "valid": true,
+                                "the_file_name": "/app/util/comparator.cc",
+                                "start_line": 32,
+                                "start_column": 30,
+                                "end_line": 32,
+                                "end_column": 43
+                            },
+                            {
+                                "as_text": "const TValue *plimit = ra+1",
+                                "valid": true,
+                                "the_file_name": "/lvm.c",
+                                "start_line": 668,
+                                "start_column": 9,
+                                "end_line": 668,
+                                "end_column": 35
+                            },
+                            {
+                                "as_text": "const char* const* range_limit_key",
+                                "valid": true,
+                                "the_file_name": "/app/db/c.cc",
+                                "start_line": 248,
+                                "start_column": 32,
+                                "end_line": 248,
+                                "end_column": 51
+                            },
+                            {
+                                "as_text": "const char* const* range_limit_key",
+                                "valid": true,
+                                "the_file_name": "/app/include/leveldb/c.h",
+                                "start_line": 115,
+                                "start_column": 40,
+                                "end_line": 115,
+                                "end_column": 59
+                            },
+                            {
+                                "as_text": "const char* limit",
+                                "valid": true,
+                                "the_file_name": "/app/table/block.cc",
+                                "start_line": 55,
+                                "start_column": 54,
+                                "end_line": 55,
+                                "end_column": 66
+                            },
+                            {
+                                "as_text": "const char* limit",
+                                "valid": true,
+                                "the_file_name": "/app/util/coding.cc",
+                                "start_line": 86,
+                                "start_column": 51,
+                                "end_line": 86,
+                                "end_column": 63
+                            },
+                            {
+                                "as_text": "const char* limit",
+                                "valid": true,
+                                "the_file_name": "/app/util/coding.cc",
+                                "start_line": 116,
+                                "start_column": 43,
+                                "end_line": 116,
+                                "end_column": 55
+                            },
+                            {
+                                "as_text": "const char* limit",
+                                "valid": true,
+                                "the_file_name": "/app/util/coding.cc",
+                                "start_line": 145,
+                                "start_column": 51,
+                                "end_line": 145,
+                                "end_column": 63
+                            },
+                            {
+                                "as_text": "const char* limit",
+                                "valid": true,
+                                "the_file_name": "/app/util/coding.h",
+                                "start_line": 39,
+                                "start_column": 43,
+                                "end_line": 39,
+                                "end_column": 55
+                            },
+                            {
+                                "as_text": "const char* limit",
+                                "valid": true,
+                                "the_file_name": "/app/util/coding.h",
+                                "start_line": 40,
+                                "start_column": 43,
+                                "end_line": 40,
+                                "end_column": 55
+                            },
+                            {
+                                "as_text": "const char* limit",
+                                "valid": true,
+                                "the_file_name": "/app/util/coding.h",
+                                "start_line": 106,
+                                "start_column": 51,
+                                "end_line": 106,
+                                "end_column": 63
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "source": [
+                "project.detach(keep_db=False)"
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "code",
+            "outputs": []
+        },
+        {
+            "source": [
+                "project.deallocate(keep_db=False)"
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "code",
+            "outputs": []
+        },
+        {
+            "source": [
+                ""
+            ],
+            "metadata": {
+                "language_info": {
+                    "name": "python"
+                }
+            },
+            "cell_type": "code",
+            "outputs": []
+        }
+    ]
+}
